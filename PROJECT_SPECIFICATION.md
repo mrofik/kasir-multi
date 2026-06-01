@@ -747,24 +747,24 @@ Devices Supported:
 ## 📋 Roadmap & Development Phases
 
 ### **Phase 1: Core Setup (Week 1-2)**
-- [ ] Project initialization
-- [ ] Technology stack setup
+- [x] Project initialization
+- [x] Technology stack setup
 - [ ] Database design & implementation
 - [ ] Authentication system
 - [ ] User management
 - [ ] Role & permission system
 
 ### **Phase 2: Kasir Module (Week 3-4)**
-- [ ] Retail POS interface
-- [ ] Product management
-- [ ] Shopping cart functionality
-- [ ] Basic payment processing
-- [ ] Receipt printing
-- [ ] Held transaction feature
+- [x] Retail POS interface
+- [x] Product management
+- [x] Shopping cart functionality
+- [x] Basic payment processing (tunai, QRIS, tunda bayar)
+- [x] Receipt printing
+- [x] Held transaction feature
 
 ### **Phase 3: Restaurant Module (Week 5-6)**
-- [ ] Table management
-- [ ] Menu display
+- [x] Table management (basic grid)
+- [x] Menu display
 - [ ] Order management
 - [ ] Kitchen order printing
 - [ ] Table merging & split bill

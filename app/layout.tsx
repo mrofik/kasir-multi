@@ -15,6 +15,7 @@ const links = [
   { href: "/transactions/held", label: "Hold" },
   { href: "/products", label: "Produk" },
   { href: "/customers", label: "Customer" },
+  { href: "/customers/debt", label: "Piutang" },
   { href: "/reports", label: "Laporan" },
   { href: "/settings", label: "Settings" },
 ];
