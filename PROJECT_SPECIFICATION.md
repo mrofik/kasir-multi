@@ -160,7 +160,7 @@ Mobile/Desktop:
    - total_amount
    - paid_amount
    - change_amount
-   - payment_method (cash, card, check, debt)
+   - payment_method (cash, qris, card, check, debt/tunda_bayar)
    - notes
    - receipt_printed
    - created_at
@@ -466,7 +466,9 @@ Mobile/Desktop:
 - ✅ Multi-level pricing (auto apply berdasarkan qty/member/amount)
 - ✅ Manual discount option
 - ✅ Tax calculation
-- ✅ Multiple payment methods (cash, card, check, debt)
+- ✅ Multiple payment methods (tunai/cash, tunda bayar/piutang, QRIS, kartu, cek)
+- ✅ QRIS payment integration (scan QR/static & dynamic QR)
+- ✅ Tunda pembayaran / bayar nanti (piutang pelanggan)
 - ✅ Change calculation
 - ✅ Receipt printing (thermal 58mm/80mm)
 - ✅ Hold transaction
@@ -639,6 +641,10 @@ Kasir Mode:
 
 #### **Payment Method Settings**
 - ✅ Enable/disable payment methods
+- ✅ Tunai (Cash): kembalian otomatis
+- ✅ QRIS: integrasi QR Code pembayaran (static & dynamic), scan to pay
+- ✅ Tunda Bayar / Piutang: bayar nanti, approval & tracking
+- ✅ Kartu Debit/Kredit
 - ✅ Payment method names
 - ✅ Approval for check/debt
 
@@ -649,9 +655,40 @@ Kasir Mode:
 - ✅ Activity logging
 - ✅ Password policies
 
+### **I. Payment Methods**
+
+#### **Metode Pembayaran yang Didukung:**
+
+1. **Tunai (Cash)**
+   - Input nominal bayar
+   - Hitung kembalian otomatis
+   - Konfirmasi sebelum selesai
+
+2. **QRIS**
+   - Generate QR Code dinamis per transaksi
+   - Support static QR (merchant QR)
+   - Notifikasi pembayaran berhasil (callback)
+   - Integrasi payment gateway (Midtrans, Xendit, atau QRIS mandiri)
+   - Cetak QR pada struk
+
+3. **Tunda Bayar / Bayar Nanti (Piutang)**
+   - Simpan transaksi sebagai piutang pelanggan
+   - Tracking outstanding debt per pelanggan
+   - Pembayaran piutang sebagian atau penuh
+   - Reminder otomatis (opsional)
+   - Laporan piutang
+
+4. **Kartu Debit/Kredit**
+   - Input referensi transaksi
+   - Konfirmasi manual
+
+5. **Cek/Giro**
+   - Input nomor cek dan tanggal jatuh tempo
+   - Approval workflow
+
 ---
 
-## 🔐 Security Features
+
 
 - ✅ User authentication (username/password)
 - ✅ Role-based access control (RBAC)
@@ -710,24 +747,24 @@ Devices Supported:
 ## 📋 Roadmap & Development Phases
 
 ### **Phase 1: Core Setup (Week 1-2)**
-- [ ] Project initialization
-- [ ] Technology stack setup
+- [x] Project initialization
+- [x] Technology stack setup
 - [ ] Database design & implementation
 - [ ] Authentication system
 - [ ] User management
 - [ ] Role & permission system
 
 ### **Phase 2: Kasir Module (Week 3-4)**
-- [ ] Retail POS interface
-- [ ] Product management
-- [ ] Shopping cart functionality
-- [ ] Basic payment processing
-- [ ] Receipt printing
-- [ ] Held transaction feature
+- [x] Retail POS interface
+- [x] Product management
+- [x] Shopping cart functionality
+- [x] Basic payment processing (tunai, QRIS, tunda bayar)
+- [x] Receipt printing
+- [x] Held transaction feature
 
 ### **Phase 3: Restaurant Module (Week 5-6)**
-- [ ] Table management
-- [ ] Menu display
+- [x] Table management (basic grid)
+- [x] Menu display
 - [ ] Order management
 - [ ] Kitchen order printing
 - [ ] Table merging & split bill
