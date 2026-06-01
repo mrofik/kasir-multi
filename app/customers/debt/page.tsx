@@ -52,6 +52,10 @@ export default function DebtPage() {
 
   const processPayment = useCallback((debtId: string, full: boolean) => {
     const amount = full ? undefined : parseInt(paymentInput[debtId]?.replace(/\D/g, "") || "0", 10);
+    if (!full && (!amount || amount <= 0)) {
+      showFeedback("Masukkan nominal pembayaran yang valid.");
+      return;
+    }
     const updated = readLS<DebtRecord[]>("debts", []).map(d => {
       if (d.id !== debtId) return d;
       const remaining = d.total - d.paidAmount;

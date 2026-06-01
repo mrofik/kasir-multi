@@ -25,7 +25,7 @@ export type CompletedTransaction = {
   total: number;
   paid: number;
   change: number;
-  paymentMethod: "cash" | "qris" | "debt";
+  paymentMethod: "cash" | "qris" | "debt" | "card" | "check";
   customerId?: string;
   customerName?: string;
 };
