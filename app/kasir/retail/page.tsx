@@ -1,9 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { products } from "@/lib/mock-data";
-
-type CartItem = { id: string; name: string; qty: number; price: number };
+import type { CartItem, HeldTransaction } from "@/lib/types";
 
 export default function RetailPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -13,6 +12,17 @@ export default function RetailPage() {
     () => cart.reduce((acc, item) => acc + item.qty * item.price, 0),
     [cart],
   );
+
+  const readHeldTransactions = useCallback(() => {
+    try {
+      return JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as HeldTransaction[];
+    } catch {
+      setFeedbackMessage(
+        "Data hold transaksi tidak valid. Silakan kosongkan storage browser jika perlu.",
+      );
+      return [];
+    }
+  }, []);
 
   const addItem = (id: string, name: string, price: number) => {
     setCart((prev) => {
@@ -26,18 +36,13 @@ export default function RetailPage() {
     });
   };
 
-  const holdTransaction = () => {
+  const holdTransaction = useCallback(() => {
     if (cart.length === 0) {
       setFeedbackMessage("Keranjang masih kosong, tidak bisa hold transaksi.");
       return;
     }
 
-    const held = JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as Array<{
-      id: string;
-      date: string;
-      items: CartItem[];
-      total: number;
-    }>;
+    const held = readHeldTransactions();
 
     held.unshift({
       id: `HOLD-${Date.now()}`,
@@ -50,14 +55,45 @@ export default function RetailPage() {
     window.dispatchEvent(new Event("held-transactions-updated"));
     setCart([]);
     setFeedbackMessage("Transaksi berhasil di-hold.");
-  };
+  }, [cart, readHeldTransactions, total]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key.toLowerCase() === "h") {
+        event.preventDefault();
+        holdTransaction();
+      }
+
+      if (event.key === "F4") {
+        event.preventDefault();
+        holdTransaction();
+      }
+
+      if (event.key === "F8") {
+        event.preventDefault();
+        setFeedbackMessage("Aksi bayar akan diimplementasikan di fase berikutnya.");
+      }
+
+      if (event.ctrlKey && event.key.toLowerCase() === "r") {
+        event.preventDefault();
+        window.location.href = "/transactions/held";
+      }
+    };
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [holdTransaction]);
 
   return (
     <section className="grid" style={{ gap: "1rem" }}>
       <div className="card">
         <h2 className="title">Kasir Grosir</h2>
         <p className="muted">Shortcut aktif: F4 (Hold), F8 (Bayar), Ctrl+H (Hold), Ctrl+R (Resume).</p>
-        {feedbackMessage ? <p className="mt-2">{feedbackMessage}</p> : null}
+        {feedbackMessage ? (
+          <p className="mt-2" role="status" aria-live="polite">
+            {feedbackMessage}
+          </p>
+        ) : null}
       </div>
 
       <div className="kasir-layout">

@@ -1,32 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-type HeldTx = {
-  id: string;
-  date: string;
-  total: number;
-  items: Array<{ id: string; name: string; qty: number }>;
-};
+import { useMemo, useSyncExternalStore } from "react";
+import type { HeldTransaction } from "@/lib/types";
 
 export default function HeldTransactionsPage() {
-  const [items, setItems] = useState<HeldTx[]>(() => {
-    if (typeof window === "undefined") return [];
-    return JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as HeldTx[];
-  });
+  const parseHeldSnapshot = (snapshot: string) => {
+    try {
+      return JSON.parse(snapshot) as HeldTransaction[];
+    } catch {
+      return [];
+    }
+  };
 
-  useEffect(() => {
-    const refreshHeld = () => {
-      setItems(JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as HeldTx[]);
-    };
-
-    window.addEventListener("storage", refreshHeld);
-    window.addEventListener("held-transactions-updated", refreshHeld);
+  const subscribe = (callback: () => void) => {
+    window.addEventListener("storage", callback);
+    window.addEventListener("held-transactions-updated", callback);
     return () => {
-      window.removeEventListener("storage", refreshHeld);
-      window.removeEventListener("held-transactions-updated", refreshHeld);
+      window.removeEventListener("storage", callback);
+      window.removeEventListener("held-transactions-updated", callback);
     };
-  }, []);
+  };
+
+  const getSnapshot = () => {
+    if (typeof window === "undefined") return "[]";
+    return localStorage.getItem("held-transactions") ?? "[]";
+  };
+
+  const heldSnapshot = useSyncExternalStore(subscribe, getSnapshot, () => "[]");
+  const items = useMemo(() => parseHeldSnapshot(heldSnapshot), [heldSnapshot]);
 
   return (
     <section className="grid" style={{ gap: "1rem" }}>
