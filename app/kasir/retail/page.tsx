@@ -18,7 +18,7 @@ export default function RetailPage() {
       return JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as HeldTransaction[];
     } catch {
       setFeedbackMessage(
-        "Data hold transaksi tidak valid. Silakan kosongkan storage browser jika perlu.",
+        "Gagal membaca data transaksi hold. Coba hapus data browser untuk aplikasi ini atau hubungi admin.",
       );
       return [];
     }
