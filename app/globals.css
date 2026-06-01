@@ -124,6 +124,10 @@ button.secondary {
   flex-wrap: wrap;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;

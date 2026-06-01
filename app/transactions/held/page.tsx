@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type HeldTx = {
   id: string;
@@ -10,10 +10,23 @@ type HeldTx = {
 };
 
 export default function HeldTransactionsPage() {
-  const [items] = useState<HeldTx[]>(() => {
+  const [items, setItems] = useState<HeldTx[]>(() => {
     if (typeof window === "undefined") return [];
     return JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as HeldTx[];
   });
+
+  useEffect(() => {
+    const refreshHeld = () => {
+      setItems(JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as HeldTx[]);
+    };
+
+    window.addEventListener("storage", refreshHeld);
+    window.addEventListener("held-transactions-updated", refreshHeld);
+    return () => {
+      window.removeEventListener("storage", refreshHeld);
+      window.removeEventListener("held-transactions-updated", refreshHeld);
+    };
+  }, []);
 
   return (
     <section className="grid" style={{ gap: "1rem" }}>

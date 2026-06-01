@@ -7,6 +7,7 @@ type CartItem = { id: string; name: string; qty: number; price: number };
 
 export default function RetailPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [feedbackMessage, setFeedbackMessage] = useState<string>("");
 
   const total = useMemo(
     () => cart.reduce((acc, item) => acc + item.qty * item.price, 0),
@@ -26,7 +27,10 @@ export default function RetailPage() {
   };
 
   const holdTransaction = () => {
-    if (cart.length === 0) return;
+    if (cart.length === 0) {
+      setFeedbackMessage("Keranjang masih kosong, tidak bisa hold transaksi.");
+      return;
+    }
 
     const held = JSON.parse(localStorage.getItem("held-transactions") ?? "[]") as Array<{
       id: string;
@@ -43,8 +47,9 @@ export default function RetailPage() {
     });
 
     localStorage.setItem("held-transactions", JSON.stringify(held));
+    window.dispatchEvent(new Event("held-transactions-updated"));
     setCart([]);
-    alert("Transaksi berhasil di-hold.");
+    setFeedbackMessage("Transaksi berhasil di-hold.");
   };
 
   return (
@@ -52,6 +57,7 @@ export default function RetailPage() {
       <div className="card">
         <h2 className="title">Kasir Grosir</h2>
         <p className="muted">Shortcut aktif: F4 (Hold), F8 (Bayar), Ctrl+H (Hold), Ctrl+R (Resume).</p>
+        {feedbackMessage ? <p className="mt-2">{feedbackMessage}</p> : null}
       </div>
 
       <div className="kasir-layout">
